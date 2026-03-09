@@ -68,10 +68,34 @@ def convert_md_to_base64(file_path):
         print(f"Successfully processed: {filename}")
         return base64_string
 
-if __name__ == '__main__':
+def get_key():
+    try:
+        # 1. Fetch the webpage content
+        headers = {'User-Agent': 'Mozilla/5.0'}  # Pretend to be a browser
+        response = requests.get('http://localhost:4000/key/key', headers=headers)
+        response.raise_for_status()  # Check for HTTP errors
 
+        # 2. Parse the HTML
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # 3. Locate the specific <main> tag
+        # We use a dictionary to match multiple attributes exactly
+        main_content = soup.find('div', {
+            'id': 'keyholder'
+        })
+        print(main_content)
+
+        if main_content:
+            return str(main_content).replace('<div id="keyholder">','').replace('</div>','')
+            # 4. Save the content to a file
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+if __name__ == '__main__':
     # Configuration
-    key = b'sixteen_byte_key' # Must be 16, 24, or 32 bytes
+    key = get_key().encode()[:16].ljust(16, b'\0') # Must be 16, 24, or 32 bytes
+    print(key)
     # Usage
     original_folder = "./original"  # Change this to your path
     output_folder = "./pages"  # Change this to your path
