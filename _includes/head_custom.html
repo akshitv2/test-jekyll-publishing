@@ -123,6 +123,7 @@ window.MathJax = {
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 <script>
+    const getCookie = n => document.cookie.split('; ').find(c => c.startsWith(n + '='))?.split('=')[1];
 const decryptData = (ciphertext, key, iv) => {
 
     const keyParsed = CryptoJS.enc.Utf8.parse(key);
@@ -138,7 +139,8 @@ const decryptData = (ciphertext, key, iv) => {
 };
 
 window.onload = function () {
-    const secretKey = "sixteen_byte_key";
+    const secretKey =  getCookie('mickey');
+    console.log(secretKey);
 
     const message = document.getElementById('cipher').innerText;
     const iv = document.getElementById('iv').innerText;

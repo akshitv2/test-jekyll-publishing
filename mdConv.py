@@ -77,6 +77,7 @@ if __name__ == '__main__':
     output_folder = "./pages"  # Change this to your path
 
     for filename in get_links(original_folder):
+
         base64_string = convert_md_to_base64(os.path.join(original_folder, filename + ".md"))
         print(base64_string)
 
@@ -93,9 +94,9 @@ if __name__ == '__main__':
             'iv': base64.b64encode(iv).decode('utf-8'),
             'ciphertext': base64.b64encode(ct_bytes).decode('utf-8')
         }
-        print(os.path.join(output_folder, filename + '.md'))
+        print(os.path.join(output_folder, filename.capitalize() + '.md'))
 
-        with open(os.path.join(output_folder, filename + '.md'), "w") as f:
-            f.write('# ' + filename + '\n'+
+        with open(os.path.join(output_folder, filename.capitalize() + '.md'), "w") as f:
+            f.write('# ' + filename.capitalize() + '\n'+
                     '<div id="iv">'+ str(result['iv']) +'</div>' +
                     '<div id="cipher">'+ str(result['ciphertext']) +'</div>')
