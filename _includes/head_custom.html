@@ -92,6 +92,18 @@
         display: none;
     }
 
+    /* Hide the break by default (Laptops/Tablets) */
+    .mobile-only {
+        display: none;
+    }
+
+    /* Show the break only on screens smaller than 768px (Phones) */
+    @media (max-width: 767px) {
+        .mobile-only {
+            display: inline;
+        }
+    }
+
 
 </style>
 
