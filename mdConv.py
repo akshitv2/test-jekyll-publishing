@@ -40,7 +40,7 @@ def download_main_content(url):
         # 3. Locate the specific <main> tag
         # We use a dictionary to match multiple attributes exactly
         main_content = soup.find('div', {
-            'class': 'main-content-wrap'
+            'id': 'main-content'
         })
         print(main_content)
 
@@ -114,7 +114,7 @@ def extract_text(text):
 
 if __name__ == '__main__':
     # Configuration
-    key = get_key().encode()[:16]  # Must be 16, 24, or 32 bytes
+    key = get_key().encode()[:32]  # Must be 16, 24, or 32 bytes
     print(key)
     # Usage
     original_folder = "./original"  # Change this to your path
