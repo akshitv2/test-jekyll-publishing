@@ -1,5 +1,7 @@
 import os
 import base64
+import re
+import sys
 
 import requests
 from bs4 import BeautifulSoup
@@ -8,6 +10,7 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 import base64
 import json
+
 
 def get_links(folder_path):
     if not os.path.exists(folder_path):
@@ -54,19 +57,23 @@ def download_main_content(url):
         print(f"An error occurred: {e}")
 
 
-def convert_md_to_base64(file_path):
+def get_file_content(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
+        return content
 
-        # Convert string to bytes, then to base64
-        content_bytes = content.encode("utf-8")
-        base64_bytes = base64.b64encode(content_bytes)
 
-        # Convert back to string for easier reading/JSON storage
-        base64_string = base64_bytes.decode("utf-8")
+def convert_md_to_base64(file_content):
+    # Convert string to bytes, then to base64
+    content_bytes = file_content.encode("utf-8")
+    base64_bytes = base64.b64encode(content_bytes)
 
-        print(f"Successfully processed: {filename}")
-        return base64_string
+    # Convert back to string for easier reading/JSON storage
+    base64_string = base64_bytes.decode("utf-8")
+
+    print(f"Successfully processed: {filename}")
+    return base64_string
+
 
 def get_key():
     try:
@@ -86,23 +93,37 @@ def get_key():
         print(main_content)
 
         if main_content:
-            return str(main_content).replace('<div id="keyholder">','').replace('</div>','')
+            return str(main_content).replace('<div id="keyholder">', '').replace('</div>', '')
             # 4. Save the content to a file
 
     except Exception as e:
         print(f"An error occurred: {e}")
 
+
+def extract_text(text):
+    # re.DOTALL (or re.S) makes the '.' match newline characters
+    pattern = r"---(.*?)---"
+    match = re.search(r'---\s*(.*?)\s*---', text, re.DOTALL)
+
+    if match:
+        extracted_text = match.group(1)
+        return extracted_text
+    else:
+        return ''
+
+
 if __name__ == '__main__':
     # Configuration
-    key = get_key().encode()[:16].ljust(16, b'\0') # Must be 16, 24, or 32 bytes
+    key = get_key().encode()[:16]  # Must be 16, 24, or 32 bytes
     print(key)
     # Usage
     original_folder = "./original"  # Change this to your path
     output_folder = "./pages"  # Change this to your path
 
     for filename in get_links(original_folder):
-
-        base64_string = convert_md_to_base64(os.path.join(original_folder, filename + ".md"))
+        file_content = get_file_content(os.path.join(original_folder, filename + ".md"))
+        print("Extracted : ", extract_text(file_content))
+        base64_string = convert_md_to_base64(file_content)
         print(base64_string)
 
         target_url = 'http://localhost:4000/original/' + filename
@@ -121,6 +142,6 @@ if __name__ == '__main__':
         print(os.path.join(output_folder, filename.capitalize() + '.md'))
 
         with open(os.path.join(output_folder, filename.capitalize() + '.md'), "w") as f:
-            f.write('# ' + filename.capitalize() + '\n'+
-                    '<div id="iv">'+ str(result['iv']) +'</div>' +
-                    '<div id="cipher">'+ str(result['ciphertext']) +'</div>')
+            f.write('---\n' + extract_text(file_content) + '\n---\n' + '# ' + filename.capitalize() + '\n' +
+                    '<div id="iv">' + str(result['iv']) + '</div>' +
+                    '<div id="cipher">' + str(result['ciphertext']) + '</div>')
