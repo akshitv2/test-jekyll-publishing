@@ -4,12 +4,9 @@ def get_links(folder_path):
     if not os.path.exists(folder_path):
         print(f"Error: The folder '{folder_path}' does not exist.")
         return []
+    return os.listdir(folder_path)
 
-    files = [
-        f.replace(".md", "")
-        for f in os.listdir(folder_path)
-        if f.endswith(".md")
-    ]
-
-    print(files)
-    return files
+def get_file_content(file_path):
+    with open(file_path, "r", encoding="utf-8") as f:
+        content = f.read()
+        return content
