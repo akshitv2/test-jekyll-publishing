@@ -7,7 +7,7 @@ from Crypto.Util.Padding import pad
 from publishingLibs.FileUtil import get_file_content
 from publishingLibs.KeyUtil import get_key
 from publishingLibs.LogUtil import LogUtil
-from publishingLibs.mdConv import extract_text, convert_md_to_base64, download_main_content, output_folder
+from publishingLibs.mdConv import extract_text, convert_md_to_base64, download_main_content
 
 config = {
     'original_folder': "./original",  # Change this to your path
@@ -29,7 +29,7 @@ for filename in os.listdir(config["original_folder"]):
     log.debug(("Extracted : ", extract_text(file_content)))
     base64_string = convert_md_to_base64(file_content)
 
-    target_url = 'http://localhost:4000/original/' + filename
+    target_url = 'http://localhost:4000/original/' + filename.replace('.md', '')
     content_string = download_main_content(target_url)
     log.debug(("Content string:", content_string))
 
@@ -42,9 +42,9 @@ for filename in os.listdir(config["original_folder"]):
         'iv': base64.b64encode(iv).decode('utf-8'),
         'ciphertext': base64.b64encode(ct_bytes).decode('utf-8')
     }
-    print(os.path.join(output_folder, filename.capitalize() + '.md'))
+    # print(os.path.join(config['output_folder'], filename.capitalize()))
 
-    with open(os.path.join(output_folder, filename.capitalize() + '.md'), "w") as f:
+    with open(os.path.join(config['output_folder'], filename.capitalize()), "w") as f:
         f.write('---\n' + extract_text(file_content) + '\n---\n' + '# ' + filename.capitalize() + '\n' +
                 '<div id="iv">' + str(result['iv']) + '</div>' +
                 '<div id="cipher">' + str(result['ciphertext']) + '</div>')
