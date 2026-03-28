@@ -26,7 +26,6 @@ def get_links(folder_path):
     print(files)
     return files
 
-
 def download_main_content(url):
     try:
         # 1. Fetch the webpage content
@@ -71,7 +70,7 @@ def convert_md_to_base64(file_content):
     # Convert back to string for easier reading/JSON storage
     base64_string = base64_bytes.decode("utf-8")
 
-    print(f"Successfully processed: {filename}")
+    # print(f"Successfully processed: {filename}")
     return base64_string
 
 
