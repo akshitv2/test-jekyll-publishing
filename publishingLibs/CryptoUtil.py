@@ -1,4 +1,8 @@
+import base64
+
 import requests
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad
 from bs4 import BeautifulSoup
 
 
@@ -23,3 +27,9 @@ def get_key():
 
     except Exception as e:
         print(f"An error occurred: {e}")
+
+def encrypt(key, data):
+    cipher = AES.new(key, AES.MODE_CBC)
+    iv = cipher.iv
+    ct_bytes = cipher.encrypt(pad(data.encode(), AES.block_size))
+    return base64.b64encode(iv).decode('utf-8'),base64.b64encode(ct_bytes).decode('utf-8')
