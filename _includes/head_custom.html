@@ -166,6 +166,53 @@
         if (message != null && iv != null) {
             document.getElementById('main-content').innerHTML = decryptData(message.innerText, secretKey, iv.innerText);
         }
+        if (window.location.href.includes('original')) {
+            renderImages();
+        }else{
+            renderEncryptedImages(secretKey);
+        }
     };
+
+    async function renderImages() {
+        try {
+            console.log("Trying something");
+            const response = await fetch('../media.json');
+            const imgData = await response.json();
+            const images = document.querySelectorAll('img');
+
+            images.forEach(img => {
+                const key = img.getAttribute('data-key');
+                if (key && imgData[key]) {
+                    const base64Prefix = 'data:image/png;base64,';
+                    img.src = imgData[key].startsWith('data:')
+                        ? imgData[key]
+                        : base64Prefix + imgData[key];
+                }
+            });
+        } catch
+            (error) {
+            console.error('Error', error);
+        }
+    }
+
+    async function renderEncryptedImages(secretKey) {
+        try {
+            console.log("Trying something");
+            const response = await fetch('../media.json');
+            const imgData = await response.json();
+            const images = document.querySelectorAll('img');
+
+            images.forEach(img => {
+                const key = img.getAttribute('data-key');
+                if (key && imgData[key]) {
+                    const base64Prefix = 'data:image/png;base64,';
+                    img.src = decryptData(imgData[key][1], secretKey, imgData[key][0]);
+                }
+            });
+        } catch
+            (error) {
+            console.error('Error', error);
+        }
+    }
 
 </script>
