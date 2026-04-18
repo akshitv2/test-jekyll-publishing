@@ -10,8 +10,12 @@ layout: default
 <button onclick="setCookie()">Save</button>
 
 <script>
-function setCookie(){
-  document.cookie = "mickey=" + encodeURIComponent(
-    document.getElementById("i").value.substring(0,32)) + "; path=/; SameSite=Strict";
+function setCookie() {
+  document.cookie =
+    "mickey=" +
+    encodeURIComponent(
+      document.getElementById("i").value.substring(0, 32)
+    ) +
+    "; path=/; SameSite=Strict; max-age=" + (60 * 60 * 24 * 30);
 }
 </script>
