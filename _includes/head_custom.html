@@ -166,16 +166,10 @@
         if (message != null && iv != null) {
             document.getElementById('main-content').innerHTML = decryptData(message.innerText, secretKey, iv.innerText);
         }
-        if (window.location.href.includes('original')) {
-            renderImages();
-        } else {
+        if (!window.location.href.includes('original')) {
             renderEncryptedImages(secretKey);
         }
     };
-
-    async function renderImages() {
-
-    }
 
     async function renderEncryptedImages(secretKey) {
         try {
@@ -192,9 +186,9 @@
                     throw new Error(`Failed to fetch JSON at ${jsonpath}: ${response.statusText}`);
                 }
                 const imgData = await response.json();
-                console.log(imgData);
+                // console.log(imgData);
                 img.src = decryptData(imgData["ct_bytes"], secretKey, imgData["iv"]);
-                console.log(jsonpath);
+                // console.log(jsonpath);
             }
         } catch (error) {
             console.error('Error:', error);

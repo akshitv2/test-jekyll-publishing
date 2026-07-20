@@ -19,8 +19,6 @@ config = {
     'key':get_key().encode()[:32],
     'iv': b"1234567890123456",
     'log_level': 'INFO',
-    'media_json_input': 'original/media.json',
-    'media_json_output': 'pages/media.json',
     'process_md': True
 }
 log = LogUtil(config["log_level"])
@@ -63,9 +61,3 @@ if config["process_md"]:
             output_file = str((output_directory.joinpath(file_path.relative_to(directory))))
             log.debug(("Output file:", output_file))
             write_public_image(output_file,iv,ct_bytes)
-
-with open(config['media_json_input'], 'r') as f:
-    data = json.load(f)
-lowercase_data = {k: encrypt(config["key"], v) for k, v in data.items()}
-with open(config['media_json_output'], 'w') as f:
-    json.dump(lowercase_data, f, indent=4)
