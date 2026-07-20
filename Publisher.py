@@ -17,6 +17,7 @@ config = {
     'original_folder': "./original",  # Change this to your path
     'output_folder': "./pages",  # Change this to your path
     'key':get_key().encode()[:32],
+    'iv': b"1234567890123456",
     'log_level': 'INFO',
     'media_json_input': 'original/media.json',
     'media_json_output': 'pages/media.json',
@@ -52,13 +53,13 @@ if config["process_md"]:
             log.debug(("Content string:", html_content_string))
 
             data = html_content_string + '<div id="b64Container">' + base64_string + '</div>'
-            iv, ct_bytes = encrypt(config["key"], data)
+            iv, ct_bytes = encrypt(config["key"],config["iv"], data)
             output_file = str((output_directory.joinpath(file_path.relative_to(directory))))
             log.debug(("Output file:", output_file))
             write_public_page(output_file, filename, file_content, iv, ct_bytes)
         if filename.endswith(".png"):
             file_content = get_img_content(file_path)
-            iv, ct_bytes = encrypt(config["key"], file_content)
+            iv, ct_bytes = encrypt(config["key"],config["iv"], file_content)
             output_file = str((output_directory.joinpath(file_path.relative_to(directory))))
             log.debug(("Output file:", output_file))
             write_public_image(output_file,iv,ct_bytes)

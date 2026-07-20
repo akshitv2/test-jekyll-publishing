@@ -184,7 +184,7 @@
 
             for (const img of images) {
                 let jsonpath = img.getAttribute('src');
-                jsonpath = jsonpath.replace('original', 'pages').replace('.png', '.json');
+                jsonpath = jsonpath.replace('original', '/test-jekyll-publishing/pages').replace('.png', '.json');
 
                 const response = await fetch(jsonpath);
 
