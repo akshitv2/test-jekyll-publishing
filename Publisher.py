@@ -33,9 +33,10 @@ from pathlib import Path
 
 directory = Path(config["original_folder"])
 output_directory = Path(config["output_folder"])
+files = list(directory.rglob("*"))
 
 if config["process_md"]:
-    for file_path in tqdm(directory.rglob("*")):
+    for file_path in tqdm(files):
         output_dir = output_directory.joinpath(file_path.parent.relative_to(directory))
         os.makedirs(output_dir, exist_ok=True)
         filename = file_path.name

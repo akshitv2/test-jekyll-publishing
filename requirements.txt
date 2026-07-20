@@ -8,3 +8,4 @@ requests
 soupsieve
 typing-extensions
 urllib3
+tqdm
