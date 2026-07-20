@@ -18,7 +18,6 @@ def get_rendered_html(url, filename):
         main_content = soup.find('div', {
             'id': 'main-content'
         })
-        print(main_content)
 
         if main_content:
             return str(main_content)

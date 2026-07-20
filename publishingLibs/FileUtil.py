@@ -28,8 +28,8 @@ def extract_md_header(text):
         return ''
 
 
-def write_public_page(output_folder, filename, file_content, iv, ct_bytes):
-    with open(os.path.join(output_folder, filename.capitalize()), "w") as f:
+def write_public_page(output_file,filename, file_content, iv, ct_bytes):
+    with open(output_file, "w") as f:
         f.write(
             '---\n' + extract_md_header(file_content) + '\n---\n'
             + '# ' + filename.capitalize().replace(".md", "") + '\n' +
