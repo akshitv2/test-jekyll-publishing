@@ -39,11 +39,10 @@ def write_public_page(output_file,filename, file_content, iv, ct_bytes):
         f.write(
             '---\n' + extract_md_header(file_content) + '\n---\n'
             + '# ' + filename.capitalize().replace(".md", "") + '\n' +
-            '<div id="iv">' + str(iv) + '</div>' +
             '<div id="cipher">' + str(ct_bytes) + '</div>')
 
 def write_public_image(output_file, iv, ct_bytes):
-    image = {"iv":iv, "ct_bytes":ct_bytes}
+    image = {"ct_bytes":ct_bytes}
     with open(str(output_file).replace(".png",".json"), "w") as f:
         f.write(str(image).replace("'",'"'))
 

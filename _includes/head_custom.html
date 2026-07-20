@@ -162,9 +162,9 @@
     window.onload = function () {
         const secretKey = getCookie('mickey');
         const message = document.getElementById('cipher');
-        const iv = document.getElementById('iv');
-        if (message != null && iv != null) {
-            document.getElementById('main-content').innerHTML = decryptData(message.innerText, secretKey, iv.innerText);
+        const iv = "MTIzNDU2Nzg5MDEyMzQ1Ng==";
+        if (message != null) {
+            document.getElementById('main-content').innerHTML = decryptData(message.innerText, secretKey, iv);
         }
         if (!window.location.href.includes('original')) {
             renderEncryptedImages(secretKey);
@@ -186,9 +186,7 @@
                     throw new Error(`Failed to fetch JSON at ${jsonpath}: ${response.statusText}`);
                 }
                 const imgData = await response.json();
-                // console.log(imgData);
-                img.src = decryptData(imgData["ct_bytes"], secretKey, imgData["iv"]);
-                // console.log(jsonpath);
+                img.src = decryptData(imgData["ct_bytes"], secretKey, "MTIzNDU2Nzg5MDEyMzQ1Ng==");
             }
         } catch (error) {
             console.error('Error:', error);
