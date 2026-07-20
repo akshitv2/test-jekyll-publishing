@@ -1,4 +1,4 @@
-<script id="MathJax-script" async
+<script async id="MathJax-script"
         src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
 </script>
 <script>
@@ -168,51 +168,36 @@
         }
         if (window.location.href.includes('original')) {
             renderImages();
-        }else{
+        } else {
             renderEncryptedImages(secretKey);
         }
     };
 
     async function renderImages() {
-        try {
-            console.log("Trying something");
-            const response = await fetch('../media.json');
-            const imgData = await response.json();
-            const images = document.querySelectorAll('img');
 
-            images.forEach(img => {
-                const key = img.getAttribute('data-key');
-                if (key && imgData[key]) {
-                    const base64Prefix = 'data:image/png;base64,';
-                    img.src = imgData[key].startsWith('data:')
-                        ? imgData[key]
-                        : base64Prefix + imgData[key];
-                }
-            });
-        } catch
-            (error) {
-            console.error('Error', error);
-        }
     }
 
     async function renderEncryptedImages(secretKey) {
         try {
             console.log("Trying something");
-            const response = await fetch('../media.json');
-            const imgData = await response.json();
             const images = document.querySelectorAll('img');
 
-            images.forEach(img => {
-                const key = img.getAttribute('data-key');
-                if (key && imgData[key]) {
-                    const base64Prefix = 'data:image/png;base64,';
-                    img.src = decryptData(imgData[key][1], secretKey, imgData[key][0]);
+            for (const img of images) {
+                let jsonpath = img.getAttribute('src');
+                jsonpath = jsonpath.replace('original', 'pages').replace('.png', '.json');
+
+                const response = await fetch(jsonpath);
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch JSON at ${jsonpath}: ${response.statusText}`);
                 }
-            });
-        } catch
-            (error) {
-            console.error('Error', error);
+                const imgData = await response.json();
+                console.log(imgData);
+                img.src = decryptData(imgData["ct_bytes"], secretKey, imgData["iv"]);
+                console.log(jsonpath);
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
     }
-
 </script>

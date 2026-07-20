@@ -1,6 +1,7 @@
 import base64
 import os
 import re
+from pathlib import Path
 
 
 def get_links(folder_path):
@@ -15,6 +16,11 @@ def get_file_content(file_path):
         content = f.read()
         return content
 
+def get_img_content(image_path):
+    with image_path.open("rb") as f:
+        encoded = base64.b64encode(f.read()).decode("utf-8")
+    data_uri = f"data:image/png;base64,{encoded}"
+    return data_uri
 
 def extract_md_header(text):
     # re.DOTALL (or re.S) makes the '.' match newline characters
@@ -35,6 +41,11 @@ def write_public_page(output_file,filename, file_content, iv, ct_bytes):
             + '# ' + filename.capitalize().replace(".md", "") + '\n' +
             '<div id="iv">' + str(iv) + '</div>' +
             '<div id="cipher">' + str(ct_bytes) + '</div>')
+
+def write_public_image(output_file, iv, ct_bytes):
+    image = {"iv":iv, "ct_bytes":ct_bytes}
+    with open(str(output_file).replace(".png",".json"), "w") as f:
+        f.write(str(image).replace("'",'"'))
 
 def convert_md_to_base64(file_content):
     # Convert string to bytes, then to base64
