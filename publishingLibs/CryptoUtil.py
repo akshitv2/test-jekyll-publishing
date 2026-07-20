@@ -30,6 +30,6 @@ def get_key():
 
 def encrypt(key, data):
     cipher = AES.new(key, AES.MODE_CBC)
-    iv = cipher.iv
+    iv = b"1234567890123456"
     ct_bytes = cipher.encrypt(pad(data.encode(), AES.block_size))
     return base64.b64encode(iv).decode('utf-8'),base64.b64encode(ct_bytes).decode('utf-8')

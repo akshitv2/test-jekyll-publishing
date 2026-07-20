@@ -3,6 +3,8 @@ import os
 
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
+from tqdm import tqdm
+
 
 from publishingLibs.FileUtil import get_file_content, write_public_page, convert_md_to_base64, get_img_content, \
     write_public_image
@@ -33,7 +35,7 @@ directory = Path(config["original_folder"])
 output_directory = Path(config["output_folder"])
 
 if config["process_md"]:
-    for file_path in directory.rglob("*"):
+    for file_path in tqdm(directory.rglob("*")):
         output_dir = output_directory.joinpath(file_path.parent.relative_to(directory))
         os.makedirs(output_dir, exist_ok=True)
         filename = file_path.name
@@ -57,7 +59,7 @@ if config["process_md"]:
             file_content = get_img_content(file_path)
             iv, ct_bytes = encrypt(config["key"], file_content)
             output_file = str((output_directory.joinpath(file_path.relative_to(directory))))
-            log.info(("Output file:", output_file))
+            log.debug(("Output file:", output_file))
             write_public_image(output_file,iv,ct_bytes)
 
 with open(config['media_json_input'], 'r') as f:
