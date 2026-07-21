@@ -9,8 +9,6 @@ def get_rendered_html(url, filename):
         headers = {'User-Agent': 'Mozilla/5.0'}  # Pretend to be a browser
         urlToCall = (url+filename).replace('\\', '/')
         response = requests.get(urlToCall, headers=headers)
-        print(response.history)  # Shows [<Response [301]>] if redirected
-        print(response.url)  # Shows the final URL (something.com/hello/)
         response.raise_for_status()  # Check for HTTP errors
 
         # 2. Parse the HTML

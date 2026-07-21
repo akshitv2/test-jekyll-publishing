@@ -43,7 +43,7 @@ def write_public_page(output_file,filename, file_content, iv, ct_bytes):
 
 def write_public_image(output_file, iv, ct_bytes):
     image = {"ct_bytes":ct_bytes}
-    with open(str(output_file).replace(".png",".json"), "w") as f:
+    with open(str(output_file).replace(".png",".json").replace(".gif",".json"), "w") as f:
         f.write(str(image).replace("'",'"'))
 
 def convert_md_to_base64(file_content):
