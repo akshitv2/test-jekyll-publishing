@@ -188,7 +188,7 @@
             const images = document.querySelectorAll('img');
 
             for (const img of images) {
-                let jsonpath = img.getAttribute('src');
+                let jsonpath = img.src;
                 jsonpath = jsonpath.replace('original', 'test-jekyll-publishing/pages').replace('.png', '.json').replace('.gif', '.json');
                 jsonpath = fixStupidPageNameIssue(jsonpath);
 
