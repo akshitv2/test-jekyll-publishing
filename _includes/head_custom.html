@@ -168,17 +168,29 @@
         }
         if (!window.location.href.includes('original')) {
             renderEncryptedImages(secretKey);
+        }else{
+            renderImages()
         }
     };
 
+    async function renderImages() {
+        const images = document.querySelectorAll('img');
+        for (const img of images) {
+            let jsonpath = img.src;
+            jsonpath = fixStupidPageNameIssue(jsonpath);
+            img.src = jsonpath;
+        }
+    }
+
     async function renderEncryptedImages(secretKey) {
         try {
-            console.log("Trying something");
+            console.log("Replacing Images");
             const images = document.querySelectorAll('img');
 
             for (const img of images) {
                 let jsonpath = img.getAttribute('src');
                 jsonpath = jsonpath.replace('original', 'test-jekyll-publishing/pages').replace('.png', '.json').replace('.gif', '.json');
+                jsonpath = fixStupidPageNameIssue(jsonpath);
 
                 const response = await fetch(jsonpath);
 
@@ -191,5 +203,15 @@
         } catch (error) {
             console.error('Error:', error);
         }
+    }
+
+    function fixStupidPageNameIssue(jsonPath){
+        const pathname = new URL(window.location.href).pathname;
+        const lastWord = pathname.split('/').filter(Boolean).pop();
+        if(jsonPath.includes(lastWord + '/')){
+            console.log(lastWord);
+            jsonPath = jsonPath.replace(lastWord + '/', '');
+        }
+        return jsonPath
     }
 </script>
