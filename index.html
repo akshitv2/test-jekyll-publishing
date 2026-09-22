@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <script>
+        const targetUrl = "https://akshitv2.github.io/MDUtils/renderDoc/index.html?theme=medium&index=https%3A%2F%2Fakshitv2.github.io%2Ftest-jekyll-publishing%2Fpages%2Findex.yaml&encrypted=true&cookieKey=mickey#/https://akshitv2.github.io/test-jekyll-publishing/pages/Articles/ToDo.md#metacontent-and-how-it-steals-your-voice";
+        document.write(`<meta http-equiv="refresh" content="0; url=${targetUrl}">`);
+        window.location.href = targetUrl;
+    </script>
+</head>
+<body>
+<p>If you are not redirected automatically, follow this <a id="redirect-link">link</a>.</p>
+<script>
+    const link = document.getElementById("redirect-link");
+    link.href = targetUrl;
+    link.textContent = `link to ${targetUrl}`;
+</script>
+</body>
+</html>
